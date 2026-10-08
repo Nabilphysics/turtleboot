@@ -640,7 +640,24 @@ ldconfig -p | grep sdformat14
 
 # 27 Nav2 packages and saved-map navigation
 
-The desktop uses Nav2, AMCL, map_server, SLAM Toolbox, and the Nav2 RViz plugins. The working saved-map launch command is:
+Nav2 runs on UTM Ubuntu. The Raspberry Pi runs TurtleBot3 hardware bringup and communicates with UTM using ROS_DOMAIN_ID=30.
+
+## Install Nav2 on UTM Ubuntu
+
+The exact original apt installation command was not recorded. To repeat the Nav2 installation for ROS 2 Jazzy, install the released binary packages:
+
+```bash
+sudo apt update
+sudo apt install ros-jazzy-navigation2 ros-jazzy-nav2-bringup
+```
+
+Official reference: [Nav2 Jazzy installation documentation](https://docs.nav2.org/jazzy/getting_started/build_and_install/local_installation/).
+
+The desktop setup also uses SLAM Toolbox for mapping. The command above installs the Nav2 navigation and bringup packages; it does not document the separate SLAM Toolbox installation.
+
+## Run saved-map navigation
+
+The working saved-map launch command is:
 
 ```bash
 ros2 launch nav2_bringup bringup_launch.py \
@@ -1702,4 +1719,8 @@ loopback_simulator:
 | Confirmed operating system | Ubuntu 24.04.5 LTS; aarch64 / ARM64 |
 
 | Network item | Observed value |
-|
+| --- | --- |
+| Mac Wi-Fi IP | 10.91.215.126 |
+| Subnet mask | 255.255.255.0 |
+| Gateway | 10.91.215.107 |
+| Subnet scanned | 10.91.215.0/24 |
