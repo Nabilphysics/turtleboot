@@ -623,6 +623,429 @@ The saved navigation map consists of:
 ~/maps/my_room.pgm
 ```
 
+# RViz configurations for hardware checks and SLAM
+
+Run these steps on **UTM Ubuntu**. Keep TurtleBot3 bringup running on the Pi and use ROS_DOMAIN_ID=30 on both machines. ROS setup is already loaded by the configured ~/.bashrc.
+
+## Hardware view: odometry, LiDAR, robot model and TF
+
+This is the configuration supplied by the team. It uses `odom` as the fixed frame and can be used before SLAM starts.
+
+Create the directory and open the file:
+
+```bash
+mkdir -p ~/rviz
+nano ~/rviz/turtlebot3_hardware.rviz
+```
+
+Paste the full configuration below. Save with Ctrl+O, Enter, then exit with Ctrl+X.
+
+```yaml
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /Global Options1
+        - /RobotModel1
+        - /LaserScan1
+        - /Odometry1
+        - /TF1
+      Splitter Ratio: 0.5
+    Tree Height: 700
+
+  - Class: rviz_common/Selection
+    Name: Selection
+
+  - Class: rviz_common/Tool Properties
+    Name: Tool Properties
+    Expanded: []
+    Splitter Ratio: 0.5
+
+  - Class: rviz_common/Views
+    Name: Views
+    Expanded:
+      - /Current View1
+    Splitter Ratio: 0.5
+
+Visualization Manager:
+  Class: ""
+  Global Options:
+    Background Color: 48; 48; 48
+    Fixed Frame: odom
+    Frame Rate: 30
+
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Name: Grid
+      Enabled: true
+      Alpha: 0.5
+      Cell Size: 1
+      Color: 160; 160; 164
+      Line Style:
+        Line Width: 0.03
+        Value: Lines
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 20
+      Reference Frame: <Fixed Frame>
+
+    - Class: rviz_default_plugins/RobotModel
+      Name: RobotModel
+      Enabled: true
+      Alpha: 1
+      Collision Enabled: false
+      Description Source: Topic
+      Description Topic:
+        Depth: 5
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /robot_description
+      Links:
+        All Links Enabled: true
+      Update Interval: 0
+
+    - Class: rviz_default_plugins/LaserScan
+      Name: LaserScan
+      Enabled: true
+      Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: 0
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Color: 255; 255; 255
+      Color Transformer: FlatColor
+      Decay Time: 0
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Min Color: 0; 0; 0
+      Position Transformer: XYZ
+      Selectable: true
+      Size (Pixels): 4
+      Size (m): 0.01
+      Style: Points
+      Topic:
+        Depth: 10
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /scan
+      Use Fixed Frame: true
+
+    - Class: rviz_default_plugins/Odometry
+      Name: Odometry
+      Enabled: true
+      Alpha: 1
+      Axes Length: 0.3
+      Axes Radius: 0.03
+      Color: 255; 25; 0
+      Keep: 100
+      Position Tolerance: 0.1
+      Shape:
+        Alpha: 1
+        Axes Length: 0.3
+        Axes Radius: 0.03
+        Color: 255; 25; 0
+        Head Length: 0.1
+        Head Radius: 0.03
+        Shaft Length: 0.3
+        Shaft Radius: 0.015
+        Value: Arrow
+      Topic:
+        Depth: 10
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /odom
+
+    - Class: rviz_default_plugins/TF
+      Name: TF
+      Enabled: true
+      Frame Timeout: 15
+      Marker Scale: 0.5
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Update Interval: 0
+
+  Enabled: true
+
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/FocusCamera
+    - Class: rviz_default_plugins/Measure
+    - Class: rviz_default_plugins/SetInitialPose
+      Topic:
+        Value: /initialpose
+    - Class: rviz_default_plugins/SetGoal
+      Topic:
+        Value: /goal_pose
+    - Class: rviz_default_plugins/PublishPoint
+      Topic:
+        Value: /clicked_point
+
+  Views:
+    Current:
+      Class: rviz_default_plugins/TopDownOrtho
+      Name: Current View
+      Angle: 0
+      Scale: 50
+      X: 0
+      Y: 0
+
+Window Geometry:
+  Height: 900
+  Width: 1400
+  X: 50
+  Y: 50
+```
+
+Open the hardware view:
+
+```bash
+rviz2 -d ~/rviz/turtlebot3_hardware.rviz
+```
+
+## SLAM view: live map, LiDAR, odometry and TF
+
+This SLAM configuration is derived from the supplied hardware view: the fixed frame is changed to `map`, and a Map display subscribes to `/map`. It is a repeatable configuration added to these notes; it is not a recovered copy of an earlier saved RViz file.
+
+Create the file:
+
+```bash
+nano ~/rviz/turtlebot3_slam.rviz
+```
+
+Paste the full configuration below and save:
+
+```yaml
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /Global Options1
+        - /RobotModel1
+        - /LaserScan1
+        - /Odometry1
+        - /TF1
+        - /Map1
+      Splitter Ratio: 0.5
+    Tree Height: 700
+
+  - Class: rviz_common/Selection
+    Name: Selection
+
+  - Class: rviz_common/Tool Properties
+    Name: Tool Properties
+    Expanded: []
+    Splitter Ratio: 0.5
+
+  - Class: rviz_common/Views
+    Name: Views
+    Expanded:
+      - /Current View1
+    Splitter Ratio: 0.5
+
+Visualization Manager:
+  Class: ""
+  Global Options:
+    Background Color: 48; 48; 48
+    Fixed Frame: map
+    Frame Rate: 30
+
+  Displays:
+    - Class: rviz_default_plugins/Map
+      Name: Map
+      Enabled: true
+      Alpha: 0.7
+      Color Scheme: map
+      Draw Behind: true
+      Topic:
+        Depth: 1
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /map
+      Update Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /map_updates
+      Use Timestamp: false
+
+    - Class: rviz_default_plugins/Grid
+      Name: Grid
+      Enabled: true
+      Alpha: 0.5
+      Cell Size: 1
+      Color: 160; 160; 164
+      Line Style:
+        Line Width: 0.03
+        Value: Lines
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 20
+      Reference Frame: <Fixed Frame>
+
+    - Class: rviz_default_plugins/RobotModel
+      Name: RobotModel
+      Enabled: true
+      Alpha: 1
+      Collision Enabled: false
+      Description Source: Topic
+      Description Topic:
+        Depth: 5
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /robot_description
+      Links:
+        All Links Enabled: true
+      Update Interval: 0
+
+    - Class: rviz_default_plugins/LaserScan
+      Name: LaserScan
+      Enabled: true
+      Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: 0
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Color: 255; 255; 255
+      Color Transformer: FlatColor
+      Decay Time: 0
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Min Color: 0; 0; 0
+      Position Transformer: XYZ
+      Selectable: true
+      Size (Pixels): 4
+      Size (m): 0.01
+      Style: Points
+      Topic:
+        Depth: 10
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /scan
+      Use Fixed Frame: true
+
+    - Class: rviz_default_plugins/Odometry
+      Name: Odometry
+      Enabled: true
+      Alpha: 1
+      Axes Length: 0.3
+      Axes Radius: 0.03
+      Color: 255; 25; 0
+      Keep: 100
+      Position Tolerance: 0.1
+      Shape:
+        Alpha: 1
+        Axes Length: 0.3
+        Axes Radius: 0.03
+        Color: 255; 25; 0
+        Head Length: 0.1
+        Head Radius: 0.03
+        Shaft Length: 0.3
+        Shaft Radius: 0.015
+        Value: Arrow
+      Topic:
+        Depth: 10
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /odom
+
+    - Class: rviz_default_plugins/TF
+      Name: TF
+      Enabled: true
+      Frame Timeout: 15
+      Marker Scale: 0.5
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Update Interval: 0
+
+  Enabled: true
+
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/FocusCamera
+    - Class: rviz_default_plugins/Measure
+    - Class: rviz_default_plugins/SetInitialPose
+      Topic:
+        Value: /initialpose
+    - Class: rviz_default_plugins/SetGoal
+      Topic:
+        Value: /goal_pose
+    - Class: rviz_default_plugins/PublishPoint
+      Topic:
+        Value: /clicked_point
+
+  Views:
+    Current:
+      Class: rviz_default_plugins/TopDownOrtho
+      Name: Current View
+      Angle: 0
+      Scale: 50
+      X: 0
+      Y: 0
+
+Window Geometry:
+  Height: 900
+  Width: 1400
+  X: 50
+  Y: 50
+```
+
+With robot bringup running on the Pi, start mapping on UTM:
+
+```bash
+ros2 launch slam_toolbox online_async_launch.py
+```
+
+In another UTM terminal, open the SLAM view:
+
+```bash
+rviz2 -d ~/rviz/turtlebot3_slam.rviz
+```
+
+In another UTM terminal, drive slowly to build the map:
+
+```bash
+ros2 run turtlebot3_teleop teleop_keyboard
+```
+
+Save the map:
+
+```bash
+mkdir -p ~/maps
+ros2 run nav2_map_server map_saver_cli -f ~/maps/my_room
+```
+
+The output files are `~/maps/my_room.yaml` and `~/maps/my_room.pgm`. The `map` fixed frame requires SLAM to publish the map-to-odom transform; use the hardware view when checking the robot before SLAM starts. The RViz goal tool in these configurations does not start navigation by itself; use the Nav2 launch and RViz instructions in section 27 for saved-map navigation.
+
 # 26 RViz and desktop dependencies
 
 The desktop initially lacked the TurtleBot3 description package, which caused the RobotModel display to fail. Installing the Jazzy TurtleBot3 description package restored the robot model in RViz.
