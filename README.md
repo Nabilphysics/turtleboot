@@ -6,6 +6,10 @@ Progress record • Updated October 8, 2026 • Syed Razwanul Haque
 
 Our TurtleBot3 Burger now runs ROS 2 Jazzy with working official keyboard teleoperation, LiDAR/odometry/TF, SLAM mapping, saved-map AMCL localization, and Nav2 goal navigation from UTM. The current TurtleBot3 /cmd_vel subscriber uses geometry_msgs/msg/TwistStamped. A custom Nav2 parameter file is used so the controller, behaviors, velocity smoother, and collision monitor also use stamped velocity commands. The current repeat procedure and full Nav2 parameter file are recorded below.
 
+# TurtleBot OS Setup Without a Monitor or Keyboard Using and Networking with Mobile Hotspot
+
+Follow this guide: [TurtleBot Headless OS Setup and Mobile Hotspot](https://github.com/Nabilphysics/turtleboot/blob/main/TurtleBot_OS_Setup_and_Mobile_Hotspot.md).
+
 # 1 PC setup
 
 I installed ROS 2 Jazzy in Ubuntu 24.04 on UTM on my MacBook and confirmed it works. The UTM Ubuntu username is nabil. Its password is not recorded here. I confirmed that its Ubuntu sources include noble, noble-updates, noble-backports, and noble-security.
