@@ -1,7 +1,7 @@
 # TurtleBot3 GNC Group Mapping and Navigation
 
 This document summarizes the working ROS 2 Jazzy workflow used by the GNC group for TurtleBot3 Burger mapping and navigation.
-
+(This doc formated with AI for better readability)
 ---
 
 ## 1. Basic Startup
