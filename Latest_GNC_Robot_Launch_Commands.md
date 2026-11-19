@@ -1,6 +1,6 @@
 ## 1. Mapping
 
-Stop UTM navigation before starting mapping. If Raspberry Pi bringup is already running, leave it running and skip the first command. For LiDAR-only mapping, you can skip RealSense.
+Stop UTM navigation before starting mapping. If Raspberry Pi bringup is already running, leave it running and skip the first command. For LiDAR-only mapping, you can skip RealSense. mode:= mapping is for both mapping and navigation. its basically robot bringup command which I will clean later. I am not gonna do it now , its 4:46 AM already, time to sleep. 
 
 ### Raspberry Pi Terminal 1 · Robot bringup
 
@@ -81,3 +81,38 @@ export ROS_DOMAIN_ID=30 RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 export GNC_ROOT="$HOME/gnc_robot_ros"
 ros2 launch "$HOME/gnc_robot_ros/navigation_only/detection_viewer.launch.py"
 ```
+
+### Optional · Enable the OpenCR buzzer with the red LED
+
+On UTM, stop the detection viewer with `Ctrl+C` and open its launch file:
+
+```bash
+nano "$HOME/gnc_robot_ros/navigation_only/detection_viewer.launch.py"
+```
+
+In the `human_led_alert_gate` node's parameter dictionary, change `'sound_enabled': False` to `'sound_enabled': True`. Add the parameter if it is missing.
+
+Save the file and rerun the UTM detection viewer command above. Keep the Pi's robot bringup and RealSense + LED launch running. The launch-file edit takes effect on restart without a `colcon build`.
+
+The built-in OpenCR buzzer requests one beep when the gate enters the red STOP state. The red LED can continue flashing while the state remains active.
+
+## 3. Connect the Pi to 5 GHz
+
+1. On the Pixel, open **Settings → Network & internet → Hotspot & tethering → Wi‑Fi hotspot → Speed & compatibility**. Select **5 GHz** if offered. If there is an **Extend compatibility** switch, turn it off. Toggle the hotspot off and on and let the Pi reconnect to `gncboot`.
+2. On the Pi, run `iw dev wlan0 link`. A frequency in the **5xxx MHz** range confirms 5 GHz. The tested connection showed **5785 MHz**. A frequency in the **24xx MHz** range means 2.4 GHz.
+3. If the Pixel only offers **2.4 and 5 GHz** together and the Pi keeps choosing 2.4 GHz, run the block below from a **local Pi terminal**. Reassociation can interrupt SSH.
+
+```bash
+net_id=$(sudo wpa_cli -i wlan0 list_networks |
+  awk -F '\t' '$2 == "gncboot" && $4 ~ /\[CURRENT\]/ {print $1; exit}')
+
+if [ -n "$net_id" ]; then
+  sudo wpa_cli -i wlan0 set_network "$net_id" freq_list \
+    '5180 5200 5220 5240 5745 5765 5785 5805 5825' &&
+    sudo wpa_cli -i wlan0 reassociate
+else
+  echo "Connect wlan0 to gncboot first."
+fi
+```
+
+After a few seconds, verify again with `iw dev wlan0 link`. This restricts the Pi to the listed 5 GHz channels, including the previously tested 5785 MHz. The hotspot needs to offer one of those channels. The change is temporary and is cleared when the Pi reboots. See [GNC_Network_Speed_Testing.md](GNC_Network_Speed_Testing.md) for throughput and live traffic tests.
