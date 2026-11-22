@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net">
+  <diagram id="gnc" name="Software architecture">
+    <mxGraphModel grid="1" gridSize="10" page="1" pageWidth="1200" pageHeight="700">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="GNC Bot software architecture" parent="1" vertex="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=30;fontStyle=1;fontColor=#172B44;">
+          <mxGeometry x="30" y="18" width="1140" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="pi" value="Raspberry Pi 4 · Robot" parent="1" vertex="1" style="rounded=1;arcSize=6;html=1;verticalAlign=top;align=left;spacingTop=13;spacingLeft=15;fontSize=19;fontStyle=1;fontColor=#172B44;fillColor=#EDF5FF;strokeColor=#7D9DC1;">
+          <mxGeometry x="30" y="80" width="350" height="560" as="geometry" />
+        </mxCell>
+        <mxCell id="utm" value="UTM Ubuntu VM · Processing" parent="1" vertex="1" style="rounded=1;arcSize=6;html=1;verticalAlign=top;align=left;spacingTop=13;spacingLeft=15;fontSize=19;fontStyle=1;fontColor=#172B44;fillColor=#ECF7F1;strokeColor=#76A98C;">
+          <mxGeometry x="535" y="80" width="635" height="560" as="geometry" />
+        </mxCell>
+        <mxCell id="wifi" value="ROS 2 over&lt;br&gt;Wi-Fi" parent="1" vertex="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#415873;">
+          <mxGeometry x="393" y="83" width="130" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="lidar" value="&lt;b&gt;Robot bringup&lt;/b&gt;&lt;br&gt;LDS-02 LiDAR + odometry" parent="1" vertex="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fontSize=15;fontColor=#172B44;strokeWidth=1.5;fillColor=#ffffff;strokeColor=#7D9DC1;">
+          <mxGeometry x="65" y="155" width="280" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="camera" value="&lt;b&gt;RealSense L515 driver&lt;/b&gt;&lt;br&gt;RGB + depth streams" parent="1" vertex="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fontSize=15;fontColor=#172B44;strokeWidth=1.5;fillColor=#ffffff;strokeColor=#7D9DC1;">
+          <mxGeometry x="65" y="285" width="280" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="alerts" value="&lt;b&gt;LED control&lt;/b&gt;&lt;br&gt;Red / yellow · optional buzzer" parent="1" vertex="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fontSize=15;fontColor=#172B44;strokeWidth=1.5;fillColor=#ffffff;strokeColor=#7D9DC1;">
+          <mxGeometry x="65" y="405" width="280" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="watchdog" value="&lt;b&gt;Velocity watchdog&lt;/b&gt;" parent="1" vertex="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fontSize=15;fontColor=#172B44;strokeWidth=1.5;fillColor=#ffffff;strokeColor=#7D9DC1;">
+          <mxGeometry x="65" y="510" width="280" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="motors" value="&lt;b&gt;OpenCR motor control&lt;/b&gt;" parent="1" vertex="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fontSize=15;fontColor=#172B44;strokeWidth=1.5;fillColor=#ffffff;strokeColor=#7D9DC1;">
+          <mxGeometry x="65" y="577" width="280" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="nav" value="&lt;b&gt;Nav2 navigation&lt;/b&gt;&lt;br&gt;AMCL + NavFn + MPPI&lt;br&gt;RViz goals · saved map" parent="1" vertex="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fontSize=15;fontColor=#172B44;strokeWidth=1.5;fillColor=#ffffff;strokeColor=#76A98C;">
+          <mxGeometry x="565" y="145" width="260" height="86" as="geometry" />
+        </mxCell>
+        <mxCell id="slam" value="&lt;b&gt;SLAM Toolbox&lt;/b&gt;&lt;br&gt;Mapping mode · save map" parent="1" vertex="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fontSize=15;fontColor=#172B44;strokeWidth=1.5;fillColor=#ffffff;strokeColor=#76A98C;">
+          <mxGeometry x="880" y="155" width="250" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="detect" value="&lt;b&gt;Person detection + distance&lt;/b&gt;&lt;br&gt;Depth registration + YOLO" parent="1" vertex="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fontSize=15;fontColor=#172B44;strokeWidth=1.5;fillColor=#ffffff;strokeColor=#76A98C;">
+          <mxGeometry x="565" y="285" width="260" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="alertgate" value="&lt;b&gt;Alert gate&lt;/b&gt;&lt;br&gt;LED state + optional sound" parent="1" vertex="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fontSize=15;fontColor=#172B44;strokeWidth=1.5;fillColor=#ffffff;strokeColor=#76A98C;">
+          <mxGeometry x="565" y="405" width="260" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="gate" value="&lt;b&gt;Navigation velocity gate&lt;/b&gt;&lt;br&gt;Stops for a detected person&lt;br&gt;with valid depth ≤ 1 m" parent="1" vertex="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fontSize=15;fontColor=#172B44;strokeWidth=1.5;fillColor=#ffffff;strokeColor=#76A98C;">
+          <mxGeometry x="880" y="482" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="scan" value="Scan + odom / TF" parent="1" edge="1" source="lidar" target="nav" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=13;fontColor=#233954;labelBackgroundColor=#ffffff;strokeColor=#415873;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="mapping" value="Saved map" parent="1" edge="1" source="slam" target="nav" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=13;fontColor=#233954;labelBackgroundColor=#ffffff;strokeColor=#415873;exitX=0;exitY=0.5;entryX=1;entryY=0.5;dashed=1;;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="slam_scan" value="" parent="1" edge="1" source="lidar" target="slam" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=13;fontColor=#233954;labelBackgroundColor=#ffffff;strokeColor=#415873;exitX=1;exitY=0.24;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="485" y="171" />
+              <mxPoint x="485" y="134" />
+              <mxPoint x="1005" y="134" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rgb" value="RGB + depth" parent="1" edge="1" source="camera" target="detect" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=13;fontColor=#233954;labelBackgroundColor=#ffffff;strokeColor=#415873;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="alertstate" value="" parent="1" edge="1" source="detect" target="alertgate" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=13;fontColor=#233954;labelBackgroundColor=#ffffff;strokeColor=#415873;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="alertsout" value="Alert state" parent="1" edge="1" source="alertgate" target="alerts" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=13;fontColor=#233954;labelBackgroundColor=#ffffff;strokeColor=#A75B26;exitX=0;exitY=0.5;entryX=1;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="navcmd" value="Nav2 velocity" parent="1" edge="1" source="nav" target="gate" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=13;fontColor=#233954;labelBackgroundColor=#ffffff;strokeColor=#415873;exitX=0.90;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="800" y="252" />
+              <mxPoint x="1005" y="252" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="person" value="Person distance" parent="1" edge="1" source="detect" target="gate" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=13;fontColor=#233954;labelBackgroundColor=#ffffff;strokeColor=#415873;exitX=1;exitY=0.5;entryX=0;entryY=0.32;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="850" y="318" />
+              <mxPoint x="850" y="514" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="safevel" value="Gated velocity" parent="1" edge="1" source="gate" target="watchdog" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=13;fontColor=#233954;labelBackgroundColor=#ffffff;strokeColor=#415873;exitX=0;exitY=0.5;entryX=1;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="motorcmd" value="" parent="1" edge="1" source="watchdog" target="motors" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=13;fontColor=#233954;labelBackgroundColor=#ffffff;strokeColor=#415873;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
