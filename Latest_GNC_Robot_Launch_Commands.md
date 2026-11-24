@@ -1,6 +1,6 @@
 ## 1. Mapping
 
-Stop UTM navigation before starting mapping. If Raspberry Pi bringup is already running, leave it running and skip the first command. For LiDAR-only mapping, you can skip RealSense. mode:= mapping is for both mapping and navigation. its basically robot bringup command which I will clean later. I am not gonna do it now , its 4:46 AM already, time to sleep. 
+Stop UTM navigation before starting mapping. If Raspberry Pi bringup is already running, leave it running and skip the first command. For LiDAR-only mapping, you can skip RealSense.
 
 ### Raspberry Pi Terminal 1 · Robot bringup
 
@@ -116,3 +116,68 @@ fi
 ```
 
 After a few seconds, verify again with `iw dev wlan0 link`. This restricts the Pi to the listed 5 GHz channels, including the previously tested 5785 MHz. The hotspot needs to offer one of those channels. The change is temporary and is cleared when the Pi reboots. See [GNC_Network_Speed_Testing.md](GNC_Network_Speed_Testing.md) for throughput and live traffic tests.
+
+## 4. Standalone human detection and stop demonstration using keyboard teleop
+
+Keep Nav2 and mapping stopped during this demo. Stop any ordinary teleop session. Use five terminals and start them in the order below. If either Pi launch is already running, keep that instance.
+
+### Raspberry Pi Terminal 1 · Robot bringup and watchdog
+
+```bash
+source /opt/ros/jazzy/setup.bash
+source "$HOME/turtlebot3_ws/install/setup.bash"
+source "$HOME/gnc_robot_ros/install/local_setup.bash"
+export ROS_DOMAIN_ID=30 RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+ros2 launch gnc_bringup robot.launch.py mode:=mapping \
+  usb_port:=/dev/serial/by-id/usb-ROBOTIS_OpenCR_Virtual_ComPort_in_FS_Mode_FFFFFFFEFFFF-if00
+```
+
+### Raspberry Pi Terminal 2 · RealSense and LED
+
+```bash
+source /opt/ros/jazzy/setup.bash
+source "$HOME/gnc_robot_ros/install/setup.bash"
+export ROS_DOMAIN_ID=30 RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+ros2 launch "$HOME/gnc_robot_ros/camera_led.launch.py"
+```
+
+### UTM Terminal 1 · Human detection viewer
+
+```bash
+source /opt/ros/jazzy/setup.bash
+source "$HOME/gnc_robot_ros/install/setup.bash"
+export ROS_DOMAIN_ID=30 RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+export GNC_ROOT="$HOME/gnc_robot_ros"
+ros2 launch "$GNC_ROOT/navigation_only/detection_viewer.launch.py"
+```
+
+### UTM Terminal 2 · Human teleop velocity gate
+
+```bash
+source /opt/ros/jazzy/setup.bash
+source "$HOME/gnc_robot_ros/install/setup.bash"
+export ROS_DOMAIN_ID=30 RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+ros2 run gnc_human_detection velocity_gate --ros-args \
+  -r __node:=human_teleop_gate \
+  -p output_topic:=/gnc/velocity_requested \
+  -p command_timeout:=0.3 \
+  -p sound_enabled:=false
+```
+
+### UTM Terminal 3 · Remapped keyboard teleop
+
+```bash
+source /opt/ros/jazzy/setup.bash
+source "$HOME/gnc_robot_ros/install/setup.bash"
+export ROS_DOMAIN_ID=30 RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+export TURTLEBOT3_MODEL=burger
+ros2 run turtlebot3_teleop teleop_keyboard --ros-args \
+  -p enable_stamped_cmd_vel:=true \
+  -r cmd_vel:=/cmd_vel_teleop
+```
+
+Keyboard velocity commands go through the human teleop gate and the Pi watchdog. The detection viewer supplies person-distance status and drives the LED alert gate. For buzzer alerts, use the optional setting in Section 2.
+
+Verify stopping with the wheels lifted before a floor demonstration. Check that a valid person distance within 1 m, and missing or invalid perception, result in zero velocity. Press Space or S to stop manually. Keep a physical stop available.
+
+Before returning to Nav2, stop the keyboard teleop and human teleop gate with Ctrl+C. This prevents competing publishers on the watchdog input.
